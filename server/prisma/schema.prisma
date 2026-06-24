@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         String    @default("USER")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  bookings     Booking[]
+
+  @@map("users")
+}
+
+model Movie {
+  id              String     @id @default(uuid())
+  title           String
+  description     String
+  durationMinutes Int        @map("duration_minutes")
+  genre           String
+  posterUrl       String?    @map("poster_url")
+  releaseDate     DateTime   @map("release_date")
+  showtimes       Showtime[]
+
+  @@map("movies")
+}
+
+model Theater {
+  id         String     @id @default(uuid())
+  name       String
+  location   String
+  totalSeats Int        @map("total_seats")
+  seats      Seat[]
+  showtimes  Showtime[]
+
+  @@map("theaters")
+}
+
+model Seat {
+  id           String        @id @default(uuid())
+  theaterId    String        @map("theater_id")
+  seatNumber   Int           @map("seat_number")
+  row          String
+  theater      Theater       @relation(fields: [theaterId], references: [id], onDelete: Cascade)
+  bookingSeats BookingSeat[]
+
+  @@unique([theaterId, row, seatNumber])
+  @@map("seats")
+}
+
+model Showtime {
+  id        String    @id @default(uuid())
+  movieId   String    @map("movie_id")
+  theaterId String    @map("theater_id")
+  startTime DateTime  @map("start_time")
+  endTime   DateTime  @map("end_time")
+  price     Float
+  movie     Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  theater   Theater   @relation(fields: [theaterId], references: [id], onDelete: Cascade)
+  bookings  Booking[]
+
+  @@map("showtimes")
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
+  showtimeId    String        @map("showtime_id")
+  totalAmount   Float         @map("total_amount")
+  status        String @default("PENDING")
+  paymentId     String?       @map("payment_id")
+  paymentStatus String @default("PENDING") @map("payment_status")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  showtime      Showtime      @relation(fields: [showtimeId], references: [id], onDelete: Cascade)
+  bookingSeats  BookingSeat[]
+
+  @@map("bookings")
+}
+
+model BookingSeat {
+  id         String  @id @default(uuid())
+  bookingId  String  @map("booking_id")
+  seatId     String  @map("seat_id")
+  showtimeId String  @map("showtime_id")
+  booking    Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  seat       Seat    @relation(fields: [seatId], references: [id], onDelete: Cascade)
+
+  @@unique([showtimeId, seatId])
+  @@map("booking_seats")
+}
