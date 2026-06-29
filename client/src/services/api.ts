@@ -1,6 +1,6 @@
 import type { AuthResponse, Booking, Movie } from "../types";
 
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "https://summer-internship-project-2-g24v.onrender.com";
 
 class ApiError extends Error {
   constructor(
