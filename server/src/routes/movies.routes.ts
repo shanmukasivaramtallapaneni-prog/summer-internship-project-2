@@ -22,7 +22,6 @@ router.get("/:id", async (req, res) => {
       where: { id: req.params.id },
       include: {
         showtimes: {
-          where: { startTime: { gt: new Date() } },
           include: { theater: true },
           orderBy: { startTime: "asc" },
         },
