@@ -1,6 +1,10 @@
 import type { AuthResponse, Booking, Movie } from "../types";
 
-const API_BASE = import.meta.env.VITE_API_URL || "https://summer-internship-project-2-g24v.onrender.com";
+const API_BASE = (import.meta.env.VITE_API_URL || "https://summer-internship-project-2-g24v.onrender.com").replace(/\/$/, "");
+
+function buildUrl(path: string) {
+  return `${API_BASE}${path.startsWith("/api") ? path : `/api${path}`}`;
+}
 
 class ApiError extends Error {
   constructor(
@@ -26,7 +30,7 @@ async function request<T>(
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(buildUrl(path), {
     ...options,
     headers,
   });

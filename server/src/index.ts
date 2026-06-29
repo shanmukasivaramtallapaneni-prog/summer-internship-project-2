@@ -13,10 +13,31 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const allowedOrigins = [
+  CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:3000",
+].filter(Boolean) as string[];
 
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: function (origin, callback) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      const isAllowedOrigin =
+        allowedOrigins.includes(origin) || origin.endsWith(".vercel.app");
+
+      if (isAllowedOrigin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
