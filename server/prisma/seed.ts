@@ -125,14 +125,14 @@ async function main() {
   // Movie 5
   const movie5 = await prisma.movie.upsert({
     where: { id: "seed-movie-5" },
-    update: {},
+    update: { posterUrl: "/posters/spider_man.png" },
     create: {
       id: "seed-movie-5",
       title: "Spider-Man: No Way Home",
       description: "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help.",
       durationMinutes: 148,
       genre: "Action/Superhero",
-      posterUrl: "https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjZi00OGUzLThhYWItZmRlYjlhNGiOThkXkEyXkFqcGdeQXVyMzU5OTQ5MTU@._V1_.jpg",
+      posterUrl: "/posters/spider_man.png",
       releaseDate: new Date("2021-12-17"),
     },
   });
@@ -140,14 +140,14 @@ async function main() {
   // Movie 6
   const movie6 = await prisma.movie.upsert({
     where: { id: "seed-movie-6" },
-    update: {},
+    update: { posterUrl: "/posters/avengers.png" },
     create: {
       id: "seed-movie-6",
       title: "Avengers: Endgame",
       description: "After the devastating events of Infinity War, the Avengers assemble once more.",
       durationMinutes: 181,
       genre: "Action/Superhero",
-      posterUrl: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_.jpg",
+      posterUrl: "/posters/avengers.png",
       releaseDate: new Date("2019-04-26"),
     },
   });
